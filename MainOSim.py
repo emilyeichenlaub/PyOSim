@@ -16,9 +16,9 @@ import opensim as osim
 import json
 import pyomeca
 import matplotlib.pyplot as plt
+import OSimProcFunctions
 
 sys.path.append('C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\OpenSim_Python')
-from Functions import Functions, xmlread
 
 if __name__ == "__main__":
 
@@ -27,16 +27,9 @@ if __name__ == "__main__":
     path = 'C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\Project1-Balance\\PythonCleanData\\'
     # Modular Settings
     settings = {
-        'SetupBatch': 'No',
-        'TrialWindows': 'No',
         'Scale': 'Yes',
         'IK': 'Yes',
         'ID': 'Yes',
-        'RRA': 'No',
-        'CMC': 'No',
-        'SO': 'No',
-        'MA': 'No',
-        'PlotIKErrors': 'No',
     }
         
     # Set up OpenSim tools
@@ -72,4 +65,23 @@ if __name__ == "__main__":
             subj_trial_folder = os.path.join(Subjects[S]['Trials'][0]['folder'], trial_name+ '.c3d')
             osim_folder = Subjects[S]['Folders.OpenSimFolder']
             print('Scaling Subject: ', S,'   Trial:', trial_name)
-            Functions.Scale(Subjects,settings, subj_trial_folder, osim_folder, S)
+            OSimProcFunctions.Scale(Subjects,settings, subj_trial_folder, osim_folder, S)
+            
+    if settings["IK"] == 'Yes':
+        for S in range(0, len(Subjects)):
+            for T in range(0,len(Subjects[S]['Trials'])):
+                subj_trial_folder = Subjects[S]['Folders.OpenSimFolder']
+                osim_folder = Subjects[S]['Folders.OpenSimFolder']
+                print('Running IK on Subject: ', S,'   Trial:', T)
+                OSimProcFunctions.IK(settings, subj_trial_folder, osim_folder, Subjects[S]['name'], Subjects[S]['Trials'][T]['name'])
+                
+    if settings['ID'] == 'Yes':
+        for S in range(0, len(Subjects)):
+            for T in range(0,len(Subjects[S]['Trials'])):
+                if 'Static' in Subjects[S]['Trials'][T]['name'] or 'STATIC' in Subjects[S]['Trials'][T]['name'] or 'static' in Subjects[S]['Trials'][T]['name']:
+                    continue
+                else:
+                    subj_trial_folder = Subjects[S]['Folders.OpenSimFolder']
+                    osim_folder = Subjects[S]['Folders.OpenSimFolder']
+                    print('Running ID on Subject: ', S,'   Trial:', T)
+                    OSimProcFunctions.ID(settings, subj_trial_folder, osim_folder, Subjects[S]['name'], Subjects[S]['Trials'][T]['name'],T,Subjects)
