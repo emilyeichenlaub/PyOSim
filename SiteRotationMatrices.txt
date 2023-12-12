@@ -1,4 +1,5 @@
 MGH:
+in C3D2OpenSim code:
     rot=[1,2,0]; mag1=-np.pi/2; mag2=-np.pi/2 # lab: 'YZX'
     
     # transform (rotate) TimeSeriesTableVec3
@@ -16,3 +17,8 @@ MGH:
     rotation(markers, rot.index(2), mag2)
     rotation(forces, rot.index(1), mag1)
     rotation(forces, rot.index(2), mag2)
+
+    vGRF = force_array[:, 2]  # pull vertical ground reaction force
+    Threshed = force_array[:, 2]
+    vGRF = force_array[:, 11]  # pull vertical ground reaction force
+    Threshed = force_array[:, 11]
