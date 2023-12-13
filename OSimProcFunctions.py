@@ -513,7 +513,7 @@ def ID(Settings, data_folder, osim_folder, subj_name, trial_name, trial_num,Subj
     setup_id_file = [x for x in os.listdir(Settings['GenericPath']) if 'Setup_ID.xml' in x][0]
     mkr_file = [x for x in os.listdir(data_folder) if trial_name + '_OpenSim.trc' in x][0]
     force_file = [x for x in os.listdir(data_folder) if trial_name + '_OpenSimGRF.mot' in x][0]
-    ext_lds_fileG = [x for x in os.listdir(Settings['GenericPath']) if 'ExternalLoads.xml' in x][0]
+    ext_lds_fileG = [x for x in os.listdir(Settings['GenericPath']) if f"{Settings['Site']}ExternalLoads.xml" in x][0]
 
     # determine which FP goes to which foot using getGaitCycles
     # GC = getGaitCycles(os.path.join(data_folder, mkr_file), os.path.join(data_folder, force_file))
@@ -532,26 +532,26 @@ def ID(Settings, data_folder, osim_folder, subj_name, trial_name, trial_num,Subj
             for elem3 in elem2:
                 # print('3 ' + elem3.tag + ':   ' + str(elem3.text))
                 for elem4 in elem3:
-                    if elem3.attrib['name'] == 'FP2_v': # set left forces
+                    if elem3.attrib['name'] == 'RightGRF': # set left forces
                         if elem4.tag == 'applied_to_body':
                             elem4.text = 'calcn_r'
-                        if elem4.tag == 'force_identifier':
-                            elem4.text = 'ground_force_1_v'
-                        if elem4.tag == 'point_identifier':
-                            elem4.text = 'ground_force_1_p'
-                        if elem4.tag == 'torque_identifier':
-                            elem4.text = 'ground_force_1_m'
+                        # if elem4.tag == 'force_identifier':
+                        #     elem4.text = 'ground_force_1_v'
+                        # if elem4.tag == 'point_identifier':
+                        #     elem4.text = 'ground_force_1_p'
+                        # if elem4.tag == 'torque_identifier':
+                        #     elem4.text = 'ground_force_1_m'
                         if elem4.tag == 'data_source_name':
                             elem4.text = force_file
-                    if elem3.attrib['name'] == 'FP1_v': # set right forces
+                    if elem3.attrib['name'] == 'LeftGRF': # set right forces
                         if elem4.tag == 'applied_to_body':
                             elem4.text = 'calcn_l'
-                        if elem4.tag == 'force_identifier':
-                            elem4.text = 'ground_force_2_v'
-                        if elem4.tag == 'point_identifier':
-                            elem4.text = 'ground_force_2_p'
-                        if elem4.tag == 'torque_identifier':
-                            elem4.text = 'ground_force_2_m'
+                        # if elem4.tag == 'force_identifier':
+                        #     elem4.text = 'ground_force_2_v'
+                        # if elem4.tag == 'point_identifier':
+                        #     elem4.text = 'ground_force_2_p'
+                        # if elem4.tag == 'torque_identifier':
+                        #     elem4.text = 'ground_force_2_m'
                         if elem4.tag == 'data_source_name':
                             elem4.text = force_file
                     # print('4 ' + elem4.tag + ':   ' + str(elem4.text))
