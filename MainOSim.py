@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Nov 27 13:52:12 2023
+BFUNC Main OpenSim Processing
+Outputs:
+    Scaled Model
+    IK - all trials
+    ID - dynamic trials
 
 @author: Emily Eichenlaub, November 2023
 """
