@@ -32,10 +32,13 @@ if __name__ == "__main__":
     
     # Modular Settings
     settings = {
+        'Site': 'UNC',
         'ConvertC3D': 'Yes',
-        'GaitEvents': 'Yes',
+        'GaitEvents': 'No',
         'GetMass': 'Yes',
         'CalculateHJC': 'No',
+        'MGH':'YZX',
+        'UNC': 'XZY'
     }
     
     # Set location of directories
