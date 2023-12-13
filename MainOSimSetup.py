@@ -28,15 +28,14 @@ if __name__ == "__main__":
 
     # Setup Directories
     CurrPath = os.getcwd()
-    path = 'C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\Project1-Balance\\PythonCleanData\\'
+    path = 'C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\BFUNC\\MGH'
     
     # Modular Settings
     settings = {
-        'Site': 'UNC',
+        'Site': 'MGH',
         'ConvertC3D': 'Yes',
         'GaitEvents': 'No',
         'GetMass': 'Yes',
-        'CalculateHJC': 'No',
         'MGH':'YZX',
         'UNC': 'XZY'
     }
@@ -62,12 +61,7 @@ if __name__ == "__main__":
         Subjects = []
         
     SC = 0
-    
-    # Locate cal file
-    FPcal_file = 'C:/Users/emily/OneDrive/Desktop/Misc/UNC Research/Codes/treadmill_calibration_matlab/Jan2022_forcepla.cal'
-    if not os.path.exists(FPcal_file):
-        FPcal_file = input('Select a force plate calibration file (.cal): ')
-    
+        
     # Loop through each subject
     for SubjLoop in range(0, len(SubjFolders)):  # first two items are garbage
         if not SubjFolders[SubjLoop]:
@@ -115,16 +109,6 @@ if __name__ == "__main__":
             TC += 1  # on to the next trial (next TRC file)
             if 'Static' in TrialName  or 'static' in TrialName or 'STATIC' in TrialName:
                 StaticTrial = TC-1
-
-        # Calculate Hip Joint Centers if desired
-        if settings["CalculateHJC"] == 'Yes':
-            print('Adding HJCs')
-            OSimSetupFunctions.filesAddHJC = [trial['name'] + '.c3d' for trial in Trials]
-            static_file_path = Trials[StaticTrial]["name"]+'.c3d'
-               
-               #     # Call findHJC with the full path to the static file
-#            findHJC(static_file_path, Trials[StaticTrial]["folder"], filesAddHJC)
-#           findHJC(Trials[StaticTrial]["name"]+'.trc', Trials[StaticTrial]["folder"]+'/',filesAddHJC)
 
         if settings["ConvertC3D"] == 'Yes':
             for j in range(len(Trials)):                   
