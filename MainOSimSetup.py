@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
-
+'''
+OpenSim Setup Pipeline
+Inputs:
+    Subject Data Folders
+        Reads .c3d files
+Outputs:
+    .trc and .mot files for all trials
+    Subjects.json     compiles all Subject and Trial data
+@author - Emily Eichenlaub, November 2023
+'''
 import os
 import numpy as np
 import pandas as pd
