@@ -22,6 +22,20 @@ from pyomeca import Markers, Analogs, DataArrayAccessor
 # by Mohammadreza Rezaie 
 # =============================================================================
 def C3D2OpenSim(input_file, directory, Settings,Trials,trial_num):
+    site = Settings['Site'] # name of lab site
+    coordination = Settings[site] # coordinates of lab site
+
+    # define which axes (X,Y,Z in order (first or second)) and how much must be rotated 
+    # for the data coordinations, rot=[X,Y,Z]
+    if   'XYZ' in coordination: rot=[0,0,0]; Mag1=0       ; Mag2=0 # OpenSim
+    elif 'XZY' in coordination: rot=[1,0,0]; Mag1=-np.pi/2; Mag2=0
+    elif 'ZYX' in coordination: rot=[0,1,0]; Mag1=+np.pi/2; Mag2=0
+    elif 'ZXY' in coordination: rot=[1,0,2]; Mag1=+np.pi/2; Mag2=+np.pi/2
+    elif 'YXZ' in coordination: rot=[0,2,1]; Mag1=+np.pi/2; Mag2=-np.pi
+    elif 'YZX' in coordination: rot=[1,2,0]; Mag1=-np.pi/2; Mag2=-np.pi/2
+    else: raise RuntimeError(f'The {coordination} is not defined properly.')
+    if coordination.startswith('-'): Mag3=np.pi # for the direction of movement
+    else: Mag3=0 
     
     c3d_path = os.path.join(directory,input_file)
     raw = Analogs.from_c3d(c3d_path, prefix_delimiter=":")
@@ -30,10 +44,9 @@ def C3D2OpenSim(input_file, directory, Settings,Trials,trial_num):
 
     NewMkrFile = os.path.join(Trials[trial_num]["folder"],'OpenSim',input_file.replace('.c3d', '_OpenSim.trc'))
     NewFrcFile = os.path.join(Trials[trial_num]["folder"],'OpenSim',input_file.replace('.c3d', '_OpenSimGRF.mot'))
-    rot=[1,2,0]; mag1=-np.pi/2; mag2=-np.pi/2 # MGH lab: 'YZX'
     
     # transform (rotate) TimeSeriesTableVec3
-    def rotation(vectorVec3, axis, magnitude):
+    def rotation(vectorVec3, magnitude,axis):
         	if   axis==0: vec=osim.Vec3(1,0,0) # X
         	elif axis==1: vec=osim.Vec3(0,1,0) # Y
         	elif axis==2: vec=osim.Vec3(0,0,1) # Z
@@ -51,10 +64,13 @@ def C3D2OpenSim(input_file, directory, Settings,Trials,trial_num):
     forces  = c3dAdapter.getForcesTable(tables)
                 
     # rotate dynamic markers and forces data
-    rotation(markers, rot.index(1), mag1)
-    rotation(markers, rot.index(2), mag2)
-    rotation(forces, rot.index(1), mag1)
-    rotation(forces, rot.index(2), mag2)
+    if Mag1!=0: rotation(markers, Mag1, rot.index(1)) # Mag1
+    if Mag2!=0: rotation(markers, Mag2, rot.index(2)) # Mag2
+    if Mag3!=0: rotation(markers, Mag3, 1) # Y (vertical axis)    
+    
+    if Mag1!=0: rotation(forces, Mag1, rot.index(1)) # Mag1
+    if Mag2!=0: rotation(forces, Mag2, rot.index(2)) # Mag2
+    if Mag3!=0: rotation(forces, Mag3, 1) # Y (vertical axis)     
 
     # write static markers to TRC file
     osim.TRCFileAdapter().write(markers, NewMkrFile)
@@ -62,7 +78,8 @@ def C3D2OpenSim(input_file, directory, Settings,Trials,trial_num):
 
     # force data labels
     labels = ['ground_force_1_v', 'ground_force_1_p', 'ground_moment_1_m',
-    		 'ground_force_2_v', 'ground_force_2_p', 'ground_moment_2_m']
+    		 'ground_force_2_v', 'ground_force_2_p', 'ground_moment_2_m',
+             'ground_force_3_v', 'ground_force_3_p', 'ground_moment_3_m']
     forces.setColumnLabels(labels)
     
     # flat the TimeSeriesTableVec3
@@ -78,10 +95,10 @@ def C3D2OpenSim(input_file, directory, Settings,Trials,trial_num):
        	column = forces.getDependentColumn(label).to_numpy()
        	forces.removeColumn(label)
            
-        if label == 'ground_force_1_vy':
-            column = np.where(column < 20, 0, column)
-        if label == 'ground_force_2_vy':
-            column = np.where(column < 20, 0, column)
+        # if label == 'ground_force_1_vy':
+        #     column = np.where(column < 20, 0, column)
+        # if label == 'ground_force_2_vy':
+        #     column = np.where(column < 20, 0, column)
             
        	# convert nans to zero
        	np.nan_to_num(column, copy=False, nan=0)
