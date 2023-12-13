@@ -37,7 +37,8 @@ if __name__ == "__main__":
         'GaitEvents': 'No',
         'GetMass': 'Yes',
         'MGH':'YZX',
-        'UNC': 'XZY'
+        'UNC': 'XZY',
+        'EMORY':'-XZY'
     }
     
     # Set location of directories
