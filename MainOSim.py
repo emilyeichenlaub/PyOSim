@@ -28,12 +28,13 @@ if __name__ == "__main__":
 
     # Setup Directories
     CurrPath = os.getcwd()
-    path = 'C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\Project1-Balance\\PythonCleanData\\'
+    path = 'C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\BFUNC\\MGH'
     # Modular Settings
     settings = {
+        'Site': 'MGH',
         'Scale': 'Yes',
         'IK': 'Yes',
-        'ID': 'Yes',
+        'ID': 'Yes'
     }
         
     # Set up OpenSim tools
@@ -87,5 +88,5 @@ if __name__ == "__main__":
                 else:
                     subj_trial_folder = Subjects[S]['Folders.OpenSimFolder']
                     osim_folder = Subjects[S]['Folders.OpenSimFolder']
-                    print('Running ID on Subject: ', S,'   Trial:', T)
+                    print('Running ID on Subject: ', Subjects[S]['name'],'   Trial:', Subjects[S]['Trials'][T]['name'])
                     OSimProcFunctions.ID(settings, subj_trial_folder, osim_folder, Subjects[S]['name'], Subjects[S]['Trials'][T]['name'],T,Subjects)
