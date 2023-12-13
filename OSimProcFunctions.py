@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Nov 27 14:50:43 2023
-
-@author: emily
+Scale, IK, and ID functions called into OSimProcFunctions.py
+@author: Emily Eichenlaub
 """
 import os
 import numpy as np
