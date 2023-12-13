@@ -30,7 +30,7 @@ def C3D2OpenSim(input_file, directory, Settings,Trials,trial_num):
 
     NewMkrFile = os.path.join(Trials[trial_num]["folder"],'OpenSim',input_file.replace('.c3d', '_OpenSim.trc'))
     NewFrcFile = os.path.join(Trials[trial_num]["folder"],'OpenSim',input_file.replace('.c3d', '_OpenSimGRF.mot'))
-    rot=[1,2,0]; mag1=-np.pi/2; mag2=-np.pi/2 # lab: 'YZX'
+    rot=[1,2,0]; mag1=-np.pi/2; mag2=-np.pi/2 # MGH lab: 'YZX'
     
     # transform (rotate) TimeSeriesTableVec3
     def rotation(vectorVec3, axis, magnitude):
