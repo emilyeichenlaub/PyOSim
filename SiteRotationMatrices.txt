@@ -1,24 +1,2 @@
-MGH:
-in C3D2OpenSim code:
-    rot=[1,2,0]; mag1=-np.pi/2; mag2=-np.pi/2 # lab: 'YZX'
-    
-    # transform (rotate) TimeSeriesTableVec3
-    def rotation(vectorVec3, axis, magnitude):
-        	if   axis==0: vec=osim.Vec3(1,0,0) # X
-        	elif axis==1: vec=osim.Vec3(0,1,0) # Y
-        	elif axis==2: vec=osim.Vec3(0,0,1) # Z
-        	rot = osim.Rotation(magnitude, vec)
-        	for i in range(vectorVec3.getNumRows()):
-        		new = rot.multiply(vectorVec3.getRowAtIndex(i))
-        		vectorVec3.setRowAtIndex(i, new)
-                
-    # rotate dynamic markers and forces data
-    rotation(markers, rot.index(1), mag1)
-    rotation(markers, rot.index(2), mag2)
-    rotation(forces, rot.index(1), mag1)
-    rotation(forces, rot.index(2), mag2)
-
-    vGRF = force_array[:, 2]  # pull vertical ground reaction force
-    Threshed = force_array[:, 2]
-    vGRF = force_array[:, 11]  # pull vertical ground reaction force
-    Threshed = force_array[:, 11]
+MGH: YZX
+UNC: XZY
