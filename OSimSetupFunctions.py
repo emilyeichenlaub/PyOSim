@@ -75,11 +75,14 @@ def C3D2OpenSim(input_file, directory, Settings,Trials,trial_num):
     # write static markers to TRC file
     osim.TRCFileAdapter().write(markers, NewMkrFile)
     print(f'Wrote {markers.getNumRows()} frames of marker data to {input_file.replace(".c3d", "_OpenSim.trc")}')
-
+    
+    og_labels = forces.getColumnLabels()
     # force data labels
-    labels = ['ground_force_1_v', 'ground_force_1_p', 'ground_moment_1_m',
-    		 'ground_force_2_v', 'ground_force_2_p', 'ground_moment_2_m',
-             'ground_force_3_v', 'ground_force_3_p', 'ground_moment_3_m']
+    fpnum = int(len(og_labels)/3)
+    labels = list()
+    for fp in range(1,fpnum+1):
+        labels += [f"ground_force_{fp}_v", f"ground_force_{fp}_p", f"ground_moment_{fp}_m"]
+        
     forces.setColumnLabels(labels)
     
     # flat the TimeSeriesTableVec3
