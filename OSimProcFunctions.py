@@ -45,13 +45,6 @@ def Scale(Subjects, Settings, static_folder, osim_folder, subj):
     MakeVirtualMkr(StaticMarkerFile, StaticVirtualFile, Subjects[subj]["Trials"][0]["files"]["OpenSimTRC"], Subjects[subj]["Folders"]["folder"])
     vFile = [x for x in os.listdir(scale_folder) if 'Virtual.trc' in x]
     static_file = [x for x in os.listdir() if 'STATIC' in x][0]
-    # if len(vFile) == 0:
-    #     virtual_file = getVirtualMarkers(static_file)
-    #     t = 'Open & ReSave'
-    #     m = 'Virtual Static Marker file created at: ' + virtual_file + '  Open & re-save file before continuing'
-    #     ans = messagebox.showinfo(title=t, message=m)
-    # else:
-    #     virtual_file = vFile[0]
 
     # state generic setup files
     setup_scale_file = [x for x in os.listdir(Settings['GenericPath']) if 'Setup_Scale_Torso.xml' in x][0]
@@ -71,6 +64,7 @@ def Scale(Subjects, Settings, static_folder, osim_folder, subj):
     shutil.copy(orig_mkrset, subj_mkrset)
     
     # copy scale setup to run
+    ## Written by Ricky Pimentel
     tree = ET.parse(os.path.join(Settings['GenericPath'], setup_scale_file))
     root = tree.getroot()
     for elem1 in root:
@@ -447,6 +441,8 @@ def IK(Settings, data_folder, osim_folder, subj_name, trial_name):
     stop_time = ik_data.iloc[len(ik_data)-1,1]
 
     # copy ik setup to run
+
+    ## Written by Ricky Pimentel
     tree = ET.parse(os.path.join(Settings['GenericPath'], setup_ik_file))
     root = tree.getroot()
     for elem1 in root:
@@ -518,7 +514,7 @@ def ID(Settings, data_folder, osim_folder, subj_name, trial_name, trial_num,Subj
     # determine which FP goes to which foot using getGaitCycles
     # GC = getGaitCycles(os.path.join(data_folder, mkr_file), os.path.join(data_folder, force_file))
 
-    # update external loads file
+    # update external loads file - Written by Ricky Pimentel
     tree = ET.parse(os.path.join(Settings['GenericPath'], ext_lds_fileG))
     root = tree.getroot()
     for elem1 in root:
@@ -563,7 +559,7 @@ def ID(Settings, data_folder, osim_folder, subj_name, trial_name, trial_num,Subj
     start_time = mkr_data.iloc[0,1]
     stop_time = mkr_data.iloc[len(mkr_data)-1,1]
 
-    # copy id setup to run
+    # copy id setup to run 
     tree = ET.parse(os.path.join(Settings['GenericPath'], setup_id_file))
     root = tree.getroot()
     for elem1 in root:
