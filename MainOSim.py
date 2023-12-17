@@ -66,11 +66,13 @@ if __name__ == "__main__":
 
     if settings["Scale"] == 'Yes':
         for S in range(0, len(Subjects)):
-            trial_name = Subjects[S]['Trials'][0]['name']
-            subj_trial_folder = os.path.join(Subjects[S]['Trials'][0]['folder'], trial_name+ '.c3d')
-            osim_folder = Subjects[S]['Folders.OpenSimFolder']
-            print('Scaling Subject: ', S,'   Trial:', trial_name)
-            OSimProcFunctions.Scale(Subjects,settings, subj_trial_folder, osim_folder, S)
+            for t in range(0,len(Subjects[S]['Trials'])):
+                if 'Static' in Subjects[S]['Trials'][t]['name'] or 'static' in Subjects[S]['Trials'][t]['name'] or 'STATIC' in Subjects[S]['Trials'][t]['name']:
+                    trial_name = Subjects[S]['Trials'][t]['name']
+                    subj_trial_folder = os.path.join(Subjects[S]['Trials'][0]['folder'], trial_name+ '.c3d')
+                    osim_folder = Subjects[S]['Folders.OpenSimFolder']
+                    print('Scaling Subject: ', Subjects[S],'   Trial:', trial_name)
+                    OSimProcFunctions.Scale(Subjects,settings, subj_trial_folder, osim_folder, S)
             
     if settings["IK"] == 'Yes':
         for S in range(0, len(Subjects)):
