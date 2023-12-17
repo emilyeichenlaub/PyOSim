@@ -38,7 +38,8 @@ if __name__ == "__main__":
         'GetMass': 'Yes',
         'MGH':'YZX',
         'UNC': 'XZY',
-        'EMORY':'-XZY'
+        'EMORY':'-XZY',
+        'NEBRASKA':'YZX'
     }
     
     # Set location of directories
