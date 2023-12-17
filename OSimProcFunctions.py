@@ -39,12 +39,12 @@ def Scale(Subjects, Settings, static_folder, osim_folder, subj):
     StaticTrials = [trial["type"] == "static" for trial in Subjects[subj]["Trials"]]
     StaticTrial = [index for index, value in enumerate(StaticTrials) if value]
     # Make virtual markers and copy into scale folder
-    StaticMarkerFile = os.path.join(Subjects[subj]["Folders.OpenSimFolder"], Subjects[subj]["Trials"][0]["files"]["OpenSimTRC"])
-    StaticVirtualFile = os.path.join(scale_folder, f"{Subjects[subj]['Trials'][0]['files']['OpenSimTRC'][:-4]}_Virtual.trc")
+    StaticMarkerFile = os.path.join(Subjects[subj]["Folders.OpenSimFolder"], Subjects[subj]["Trials"][StaticTrial[0]]["files"]["OpenSimTRC"])
+    StaticVirtualFile = os.path.join(scale_folder, f"{Subjects[subj]['Trials'][StaticTrial[0]]['files']['OpenSimTRC'][:-4]}_Virtual.trc")
 
-    MakeVirtualMkr(StaticMarkerFile, StaticVirtualFile, Subjects[subj]["Trials"][0]["files"]["OpenSimTRC"], Subjects[subj]["Folders"]["folder"])
+    MakeVirtualMkr(StaticMarkerFile, StaticVirtualFile,Subjects[subj]["Trials"][StaticTrial[0]]["files"]["OpenSimTRC"], Subjects[subj]["Folders"]["folder"])
     vFile = [x for x in os.listdir(scale_folder) if 'Virtual.trc' in x]
-    static_file = [x for x in os.listdir() if 'STATIC' in x][0]
+    static_file = [x for x in os.listdir() if 'STATIC' in x or 'Static' in x or 'static' in x][0]
 
     # state generic setup files
     setup_scale_file = [x for x in os.listdir(Settings['GenericPath']) if 'Setup_Scale_Torso.xml' in x][0]
