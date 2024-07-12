@@ -39,7 +39,8 @@ if __name__ == "__main__":
         'MGH':'YZX',
         'UNC': 'XZY',
         'EMORY':'-XZY',
-        'NEBRASKA':'YZX'
+        'NEBRASKA':'YZX',
+        'HSS':'XZY'
     }
     
     # Set location of directories
