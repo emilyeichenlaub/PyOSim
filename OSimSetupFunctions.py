@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Dec  5 13:59:01 2023
-
-@author: emily
+Called in MainOSimSetup.py
+Updated 12/2024 to process strength outcomes 
 """
 import os
 import numpy as np
@@ -330,6 +329,78 @@ def butterworth_filter(data, cutoff_freq, fs, order=4):
     b, a = butter(order, normal_cutoff, btype='low', analog=False)
     filtered_data = filtfilt(b, a, data, axis=0)
     return filtered_data
+
+def extract_strength_data(position_data, torque_data,collection_type):
+    # 8 Hz lowpass 4th order butterworth filter
+    torque_data = butterworth_filter(torque_data,8, 100, order=4)
+
+    if collection_type == 'humac':
+        f2e = np.diff(position_data) < 0 # flexion to extension - negative slope
+        e2f = np.diff(position_data) > 0 # extension to flexion - positive slope
+        
+        peaks, _ = find_peaks(torque_data[0:len(torque_data)],distance=100,height=1)    
+        
+        plt.scatter(peaks,np.zeros(len(peaks)),label='peaks')
+        plt.plot(position_data)
+        plt.plot(torque_data, label='torque')
+        
+        tor_vals = torque_data[peaks]
+        # convert to series with indices of peak torques
+        tor_vals = pd.Series(tor_vals, index=peaks)
+    
+        extension = []
+        flexion = []
+        for idx in peaks:  # Use 'peaks' to get the original index
+            peak_val = tor_vals[idx]  # Get the value from 'tor_vals' at the current peak index
+            position_val = position_data[idx]
+            if f2e[idx] == True:  # Check whether the corresponding f2e value is True
+                extension.append((position_val, peak_val))  # Append the index and the value to extension
+            else:
+                flexion.append((position_val, peak_val))
+                
+    if collection_type == 'biodex':
+        
+        position_data = butterworth_filter(position_data,8, 100, order=4)
+        
+        # biodex = extension is more positive, flexion is less positive
+        f2e = np.diff(position_data) < 0 # flexion to extension - negative slope (should be pos torque vals)
+        e2f = np.diff(position_data) > 0 # extension to flexion - positive slope (should be neg torque vals)
+        
+        # extension torques
+        ext_peaks, _ = find_peaks(torque_data[0:len(torque_data)],distance=200,prominence=1)  
+        
+        plt.scatter(ext_peaks,np.zeros(len(ext_peaks)),label='extension peaks')
+        plt.plot(position_data)
+        plt.plot(torque_data, label='extension torque')
+        
+        # flexion torques (originally negative values)
+        inverted_torque_data = -torque_data
+        flex_peaks, _ = find_peaks(inverted_torque_data, distance=200,prominence=1)
+                
+        plt.scatter(flex_peaks,np.zeros(len(flex_peaks)),label='flexion peaks')
+        plt.plot(position_data, label='position(ext+/flex-')
+        plt.plot(inverted_torque_data, label='flexion torque')
+        plt.legend()
+        plt.show()
+        
+        peaks = np.concatenate((flex_peaks, ext_peaks),axis = 0) # concatenate flexion and extension indices
+        tor = torque_data[peaks] # concatenate flexion and extension torque values
+        tor_vals = pd.Series(tor, index=peaks) # get series that combines peak indices and torque values
+
+        extension = []
+        flexion = []
+        for idx in peaks:  # Use 'peaks' to get the original index
+            peak_val = tor_vals[idx]  # Get the value from 'tor_vals' at the current peak index
+            position_val = position_data[idx]
+            if f2e[idx] == True:  # Check whether the corresponding f2e value is True
+                extension.append((position_val, peak_val))  # Append the index and the value to extension
+            else:
+                flexion.append((position_val, peak_val))
+            
+    flex = pd.DataFrame(flexion, columns=['Position(Degrees)', 'Torque(Foot-Pounds)'])
+    ext = pd.DataFrame(extension, columns=['Position(Degrees)', 'Torque(Foot-Pounds)'])
+
+    return ext, flex
 
 def LoadGRF(Files,Trials,StaticTrial):
     '''LoadGRF
