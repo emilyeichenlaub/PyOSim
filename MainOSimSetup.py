@@ -129,7 +129,8 @@ if __name__ == "__main__":
             TC += 1  # on to the next trial (next TRC file)
             if 'Static' in TrialName  or 'static' in TrialName or 'STATIC' in TrialName:
                 StaticTrial = TC-1
-
+            Subjects[SC-1]["Trials"] = Trials
+            
         if settings["ConvertC3D"] == 'Yes':
             for j in range(len(Trials)):                   
                 os.chdir(Subjects[SC - 1]['Folders']['folder'])
