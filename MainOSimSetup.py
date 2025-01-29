@@ -33,22 +33,24 @@ if __name__ == "__main__":
 
     # Setup Directories
     CurrPath = os.getcwd()
-    path = 'C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\BFUNC\\UGA' #mocap data (.c3ds)
+    path = 'C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\BFUNC\\SMI' #mocap data (.c3ds)
     strength_path = 'C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\BFUNC\\Strength Outcomes\\UGA' # biodex data
 
     # Modular Settings
     settings = {
-        'Site': 'UNC',
+        'Site': 'SMI',
         'ConvertC3D': 'No',
         'GaitEvents': 'No',
         'GetMass': 'No',
         'Strength': 'Yes',
+        
         'MGH':'YZX',
         'UNC': 'XZY',
         'EMORY':'-XZY',
         'NEBRASKA':'YZX',
         'HSS':'XZY',
-        'IOWA': 'YZX'
+        'IOWA': 'YZX',
+        'SMI': 'YZX'
     }
     
     # Set location of directories
