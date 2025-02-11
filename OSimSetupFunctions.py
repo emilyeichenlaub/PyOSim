@@ -2,16 +2,19 @@
 """
 Called in MainOSimSetup.py
 Updated 12/2024 to process strength outcomes 
+Updated 02/2025 to include gap filling mocap data
 """
 import os
 import numpy as np
 import pandas as pd
 from scipy.spatial.transform import Rotation as R
+from scipy.interpolate import CubicSpline
 from scipy.linalg import svd
 from scipy.signal import butter, filtfilt
 import sys
 import opensim as osim
 import json
+import math
 #import c3d
 import matplotlib.pyplot as plt
 from pyomeca import Markers, Analogs, DataArrayAccessor
@@ -61,7 +64,54 @@ def C3D2OpenSim(input_file, directory, Settings,Trials,trial_num):
     # read markers and forces from C3D file
     markers = c3dAdapter.getMarkersTable(tables)
     forces  = c3dAdapter.getForcesTable(tables)
+    
+    # Get number of frames (rows) and markers (columns)
+    num_rows = markers.getNumRows()
+    num_markers = markers.getNumColumns()
+    time_values = markers.getIndependentColumn()  # Time column
+    
+    for marker_idx in range(num_markers):
+        # initiate xyz data for each marker
+        x_data = []
+        y_data = []
+        z_data = []
+        time_data = []
+        missing_data = []
+        
+        # iterate through each row in c3d file
+        for row_idx in range(num_rows):
+            # get xyz marker data for each row
+            mrk_val = markers.getRowAtIndex(row_idx)[marker_idx] # Vec3 data type now
+            # if it is nan or 0, that row is empty
+            if (mrk_val.get(0) == 0 and mrk_val.get(1) == 0 and mrk_val.get(2) == 0) or (math.isnan(mrk_val.get(0)) and math.isnan(mrk_val.get(1)) and math.isnan(mrk_val.get(2))):
+                # add row index to missing_data
+                missing_data.append(row_idx)
+            else:
+                # add non-empty indices to time and xyz
+                time_data.append(time_values[row_idx])
+                x_data.append(mrk_val.get(0))
+                y_data.append(mrk_val.get(1))
+                z_data.append(mrk_val.get(2))  
                 
+        if len(missing_data)>0: # if there are gaps in the data
+            # Cubic Spline xyz data
+            spline_x = CubicSpline(time_data, x_data, bc_type='not-a-knot')
+            spline_y = CubicSpline(time_data, y_data, bc_type='not-a-knot')
+            spline_z = CubicSpline(time_data, z_data, bc_type='not-a-knot')
+            
+            # for each row in missing data, get the xyz value for the missing index
+            for row_idx in missing_data:
+                interpolated_x = spline_x(time_values[row_idx])
+                interpolated_y = spline_y(time_values[row_idx])
+                interpolated_z = spline_z(time_values[row_idx])
+    
+                # Vec3 can only take in floats - convert array to float
+                new_vec3 = osim.Vec3(float(interpolated_x), float(interpolated_y), float(interpolated_z))
+                row_vec3 = markers.getRowAtIndex(row_idx)
+                row_vec3[marker_idx] = new_vec3  # Update only this marker in the row
+    
+                markers.setRowAtIndex(row_idx, row_vec3)  # Save back into OpenSim table
+                    
     # rotate dynamic markers and forces data
     if Mag1!=0: rotation(markers, Mag1, rot.index(1)) # Mag1
     if Mag2!=0: rotation(markers, Mag2, rot.index(2)) # Mag2
@@ -97,11 +147,6 @@ def C3D2OpenSim(input_file, directory, Settings,Trials,trial_num):
        	column = forces.getDependentColumn(label).to_numpy()
        	forces.removeColumn(label)
            
-        # if label == 'ground_force_1_vy':
-        #     column = np.where(column < 20, 0, column)
-        # if label == 'ground_force_2_vy':
-        #     column = np.where(column < 20, 0, column)
-            
        	# convert nans to zero
        	np.nan_to_num(column, copy=False, nan=0)
        	if unit.endswith('mm'):
