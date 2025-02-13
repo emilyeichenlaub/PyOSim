@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Called in MainOSimSetup.py
-Updated 12/2024 to process strength outcomes 
-Updated 02/2025 to include gap filling mocap data
+functions called within MainOSimSetup:
+    C3D2OpenSim
+    writeTRC
+    butterworth_filter
+    extract_strength_data
 """
 import os
 import numpy as np
@@ -10,7 +12,7 @@ import pandas as pd
 from scipy.spatial.transform import Rotation as R
 from scipy.interpolate import CubicSpline
 from scipy.linalg import svd
-from scipy.signal import butter, filtfilt
+from scipy.signal import butter, filtfilt, find_peaks
 import sys
 import opensim as osim
 import json
@@ -165,7 +167,7 @@ def C3D2OpenSim(input_file, directory, Settings,Trials,trial_num):
     print(f'Wrote {forces.getNumRows()} frames of force data to {input_file.replace(".c3d", "_OpenSimGRF.mot")}')
     
     if Settings["GaitEvents"] == 'Yes':
-        '''get timing of gait events (Heel Strike and Toe Off)
+        '''get timing of gait events (heel strike and toe off)
         '''
         if 'Static' in input_file  or 'static' in input_file or 'STATIC' not in input_file:
             FC_threshold = 20
@@ -446,7 +448,7 @@ def extract_strength_data(position_data, torque_data,collection_type):
     ext = pd.DataFrame(extension, columns=['Position(Degrees)', 'Torque(Foot-Pounds)'])
 
     return ext, flex
-
+   
 def LoadGRF(Files,Trials,StaticTrial):
     '''LoadGRF
     Inputs: 

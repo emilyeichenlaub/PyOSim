@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-BFUNC Main OpenSim Processing
+Inputs:
+    Subject folders with converted .trc and .mot files
+    Subjects.json file
 Outputs:
-    Scaled Model
-    IK - all trials
-    ID - dynamic trials
-
-@author: Emily Eichenlaub, November 2023
+    Subject-specific scaled model
+    Inverse kinematics
+    Inverse dynamics
 """
 
 import os
@@ -28,28 +28,26 @@ if __name__ == "__main__":
 
     # Setup Directories
     CurrPath = os.getcwd()
-    path = 'C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\BFUNC\\MGH'
+    path = 'C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\BFUNC\\SMI'
     # Modular Settings
     settings = {
-        'Site': 'MGH',
-        'Scale': 'Yes',
+        'Site': 'SMI',
+        'Scale': 'No',
         'IK': 'Yes',
-        'ID': 'Yes'
+        'ID': 'Yes',
     }
         
     # Set up OpenSim tools
     geopath = 'C:/OpenSim 4.4/Geometry'
 
-    
     # Set up tool directories
-    GenericFilePath = 'C:/Users/emily/OneDrive/Desktop/Misc/UNC Research/OpenSim_Python/OpenSimProcessingFiles'
+    GenericFilePath = 'C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\OpenSim_Python\\OpenSimProcessingFiles'
     model = osim.Model(os.path.join(GenericFilePath,'gait2392_frontHingesKnee_BFUNC.osim'))
     osim.ModelVisualizer.addDirToGeometrySearchPaths(geopath)
     sys.path.append(GenericFilePath)
     GenericDir = os.listdir(GenericFilePath)
     settings["GenericPath"] = GenericFilePath
     settings["GenericDir"] = GenericDir
-    sys.path.append('C:/Users/emily/OneDrive/Desktop/Misc/UNC Research/OpenSim_Python/Functions')
     
     # Set location of directories
     if os.path.exists(path):
@@ -62,7 +60,7 @@ if __name__ == "__main__":
             Subjects = json.load(json_file)
     
     # Set up paths
-    os.chdir('C:/Users/emily/OneDrive/Desktop/Misc/UNC Research/OpenSim_Python')
+    os.chdir('C:\\Users\\emily\\OneDrive\\Desktop\\Misc\\UNC Research\\OpenSim_Python')
 
     if settings["Scale"] == 'Yes':
         for S in range(0, len(Subjects)):
@@ -92,3 +90,4 @@ if __name__ == "__main__":
                     osim_folder = Subjects[S]['Folders.OpenSimFolder']
                     print('Running ID on Subject: ', Subjects[S]['name'],'   Trial:', Subjects[S]['Trials'][T]['name'])
                     OSimProcFunctions.ID(settings, subj_trial_folder, osim_folder, Subjects[S]['name'], Subjects[S]['Trials'][T]['name'],T,Subjects)
+                    

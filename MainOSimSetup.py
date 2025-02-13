@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-OpenSim Setup Pipeline
 Inputs:
     .c3d files
 
@@ -39,10 +38,10 @@ if __name__ == "__main__":
     # Modular Settings
     settings = {
         'Site': 'SMI',
-        'ConvertC3D': 'No',
+        'ConvertC3D': 'Yes',
         'GaitEvents': 'No',
-        'GetMass': 'No',
-        'Strength': 'Yes',
+        'GetMass': 'Yes',
+        'Strength': 'No',
         
         'MGH':'YZX',
         'UNC': 'XZY',
@@ -130,7 +129,7 @@ if __name__ == "__main__":
             if 'Static' in TrialName  or 'static' in TrialName or 'STATIC' in TrialName:
                 StaticTrial = TC-1
             Subjects[SC-1]["Trials"] = Trials
-            
+
         if settings["ConvertC3D"] == 'Yes':
             for j in range(len(Trials)):                   
                 os.chdir(Subjects[SC - 1]['Folders']['folder'])
