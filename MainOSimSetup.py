@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Inputs:
     .c3d files
@@ -10,7 +9,8 @@ Outputs:
         5 max flexion/extension torque values from biodex
         
         
-Updated 12/2024 to include strength outcomes from biodex
+Updated 12/2024 to include strength outcomes from biodex/humac
+Updated 03/2025 to remove opensource method of reading in c3d files
 """
 import os
 import numpy as np
@@ -22,9 +22,8 @@ import sys
 import opensim as osim
 import json
 #import c3d
-import pyomeca
 import matplotlib.pyplot as plt
-from pyomeca import Markers, Analogs, DataArrayAccessor
+#from pyomeca import Markers, Analogs, DataArrayAccessor
 import OSimSetupFunctions
 
 
