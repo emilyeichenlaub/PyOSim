@@ -18,7 +18,6 @@ from scipy.signal import butter, filtfilt
 import sys
 import opensim as osim
 import json
-import pyomeca
 import matplotlib.pyplot as plt
 import OSimProcFunctions
 
