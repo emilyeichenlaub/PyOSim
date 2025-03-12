@@ -17,7 +17,6 @@ import pandas as pd
 import sys
 import opensim as osim
 import json
-import pyomeca
 import shutil
 import xml.etree.ElementTree as ET
 
