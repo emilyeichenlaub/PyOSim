@@ -17,9 +17,7 @@ import sys
 import opensim as osim
 import json
 import math
-#import c3d
 import matplotlib.pyplot as plt
-from pyomeca import Markers, Analogs, DataArrayAccessor
 
 # =============================================================================
 # C3d2OpenSim.py code written by Emily Eichenlaub and assisted
