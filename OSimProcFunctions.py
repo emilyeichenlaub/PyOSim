@@ -129,6 +129,10 @@ def readTRC(file):
 
     markers = l.split('\t')
     data = pd.read_csv(file, skiprows=4, delimiter='\t')
+    nan_check = ~np.all(np.isnan(data), axis=1) #remove any row with all NaN values
+    data = data[nan_check]
+    data = data.values
+
     data = data.values
 
     if np.sum(data[:, -1]) == 0:
@@ -596,3 +600,4 @@ def ID(Settings, data_folder, osim_folder, subj_name, trial_name, trial_num,Subj
     # Run ID
     id = osim.InverseDynamicsTool(runID)  # Open scaling tool with new attributes
     id.run()
+
