@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Functions called from MainOSim.py
     Scale
@@ -133,8 +132,6 @@ def readTRC(file):
     data = data[nan_check]
     data = data.values
 
-    data = data.values
-
     if np.sum(data[:, -1]) == 0:
         data = np.delete(data, -1, axis=1)
 
@@ -154,8 +151,10 @@ def readTRC(file):
     col_names.insert(1,'Time')
 
     col_names = np.array(col_names)
-    out = pd.DataFrame(data[:, :-1], columns=col_names.flatten())
-    
+    if data.shape[1] == 96:
+        out = pd.DataFrame(data[:, :-1], columns=col_names.flatten())
+    else:
+        out = pd.DataFrame(data[:, :], columns=col_names.flatten())
     var_names =  col_names
 
     out.columns = var_names
@@ -450,6 +449,9 @@ def IK(Settings, data_folder, osim_folder, subj_name, trial_name):
     # get start and stop times
     #ik_data = pd.read_csv(os.path.join(data_folder, mkr_file), sep='\t', skiprows=4)
     ik_data = pd.read_csv(os.path.join(data_folder, mkr_file), skiprows=4, sep='\t',encoding='utf-8')
+    nan_check = ~np.all(np.isnan(ik_data), axis=1) #remove any row with all NaN values
+    ik_data = ik_data[nan_check]
+
     # ik_data = pd.read_csv(os.path.join(data_folder, mkr_file), header=5, sep = '\t', skiprows=lambda x: x == 5 and pd.isna(pd.read_csv(os.path.join(data_folder, mkr_file), header=None, nrows=1).iloc[0, 0]))
     start_time = ik_data.iloc[0,1]
     stop_time = ik_data.iloc[len(ik_data)-1,1]
@@ -540,7 +542,7 @@ def ID(Settings, data_folder, osim_folder, subj_name, trial_name, trial_num,Subj
             for elem3 in elem2:
                 # print('3 ' + elem3.tag + ':   ' + str(elem3.text))
                 for elem4 in elem3:
-                    if elem3.attrib['name'] == 'RightGRF': # set left forces
+                    if elem3.attrib['name'] == 'RightGRF': # set right forces
                         if elem4.tag == 'applied_to_body':
                             elem4.text = 'calcn_r'
                         # if elem4.tag == 'force_identifier':
@@ -551,7 +553,7 @@ def ID(Settings, data_folder, osim_folder, subj_name, trial_name, trial_num,Subj
                         #     elem4.text = 'ground_force_1_m'
                         if elem4.tag == 'data_source_name':
                             elem4.text = force_file
-                    if elem3.attrib['name'] == 'LeftGRF': # set right forces
+                    if elem3.attrib['name'] == 'LeftGRF': # set left forces
                         if elem4.tag == 'applied_to_body':
                             elem4.text = 'calcn_l'
                         # if elem4.tag == 'force_identifier':
@@ -600,4 +602,3 @@ def ID(Settings, data_folder, osim_folder, subj_name, trial_name, trial_num,Subj
     # Run ID
     id = osim.InverseDynamicsTool(runID)  # Open scaling tool with new attributes
     id.run()
-
