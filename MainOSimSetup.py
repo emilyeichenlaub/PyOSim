@@ -48,7 +48,8 @@ if __name__ == "__main__":
         'NEBRASKA':'YZX',
         'HSS':'XZY',
         'IOWA': 'YZX',
-        'SMI': 'YZX'
+        'SMI': 'YZX',
+        'OSU':'XZY'
     }
     
     # Set location of directories
@@ -281,3 +282,4 @@ if __name__ == "__main__":
     
     
     print(f'Subjects saved to {json_file_path}')
+
