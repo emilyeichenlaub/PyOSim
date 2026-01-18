@@ -48,6 +48,7 @@ if __name__ == "__main__":
         'NEBRASKA':'YZX',
         'HSS':'XZY',
         'IOWA': 'YZX',
+        'IOWA_SECONDARY': 'XYZ',
         'SMI': 'YZX',
         'OSU':'XZY'
     }
@@ -282,4 +283,5 @@ if __name__ == "__main__":
     
     
     print(f'Subjects saved to {json_file_path}')
+
 
