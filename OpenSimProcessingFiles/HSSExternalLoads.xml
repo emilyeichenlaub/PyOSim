@@ -5,18 +5,18 @@
 				<applied_to_body>calcn_l</applied_to_body>
 				<force_expressed_in_body>ground</force_expressed_in_body>
 				<point_expressed_in_body>ground</point_expressed_in_body>
-				<force_identifier>ground_force_2_v</force_identifier>
-				<point_identifier>ground_force_2_p</point_identifier>
-				<torque_identifier>ground_moment_2_m</torque_identifier>
+				<force_identifier>ground_force_3_v</force_identifier>
+				<point_identifier>ground_force_3_p</point_identifier>
+				<torque_identifier>ground_moment_3_m</torque_identifier>
 				<data_source_name>UNC_S0_PILOT_GAIT_T2_OpenSimGRF.mot</data_source_name>
 			</ExternalForce>
 			<ExternalForce name="RightGRF">
 				<applied_to_body>calcn_r</applied_to_body>
 				<force_expressed_in_body>ground</force_expressed_in_body>
 				<point_expressed_in_body>ground</point_expressed_in_body>
-				<force_identifier>ground_force_1_v</force_identifier>
-				<point_identifier>ground_force_1_p</point_identifier>
-				<torque_identifier>ground_moment_1_m</torque_identifier>
+				<force_identifier>ground_force_4_v</force_identifier>
+				<point_identifier>ground_force_4_p</point_identifier>
+				<torque_identifier>ground_moment_4_m</torque_identifier>
 				<data_source_name>UNC_S0_PILOT_GAIT_T2_OpenSimGRF.mot</data_source_name>
 			</ExternalForce>
 		</objects>
